@@ -24,7 +24,7 @@ npm install -g @anthropic/MCP-LEGAL-ADVISOR
 ### Option 2: From source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/MCP-LEGAL-ADVISOR
+git clone https://github.com/Angioz/MCP-LEGAL-ADVISOR
 cd MCP-LEGAL-ADVISOR
 npm install
 npm run build
