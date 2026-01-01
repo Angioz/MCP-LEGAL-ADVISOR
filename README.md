@@ -18,14 +18,14 @@ An MCP (Model Context Protocol) server that provides Claude with access to autho
 ### Option 1: npm (recommended)
 
 ```bash
-npm install -g @anthropic/legal-knowledge-mcp
+npm install -g @anthropic/MCP-LEGAL-ADVISOR
 ```
 
 ### Option 2: From source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/legal-knowledge-mcp
-cd legal-knowledge-mcp
+git clone https://github.com/YOUR_USERNAME/MCP-LEGAL-ADVISOR
+cd MCP-LEGAL-ADVISOR
 npm install
 npm run build
 ```
@@ -40,7 +40,7 @@ Add to your Claude MCP configuration:
 {
   "mcpServers": {
     "legal-knowledge": {
-      "command": "legal-knowledge-mcp"
+      "command": "MCP-LEGAL-ADVISOR"
     }
   }
 }
@@ -53,7 +53,7 @@ Add to your Claude MCP configuration:
   "mcpServers": {
     "legal-knowledge": {
       "command": "node",
-      "args": ["/path/to/legal-knowledge-mcp/dist/index.js"]
+      "args": ["/path/to/MCP-LEGAL-ADVISOR/dist/index.js"]
     }
   }
 }
