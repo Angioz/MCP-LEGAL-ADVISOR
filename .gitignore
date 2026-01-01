@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+logs/
+*.log
+
+# Cache contents (keep directory structure, ignore data)
+.cache/*
+!.cache/.gitkeep
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Personalized agent files (never commit these)
+agents/*/instructions.local.md
+agents/*/dashboard.local.md
+*.personal.md
+*.private.md
+
+# Test files
+*.test.mjs
