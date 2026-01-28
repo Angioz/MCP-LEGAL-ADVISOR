@@ -32,6 +32,17 @@ agents/*/instructions.local.md
 agents/*/dashboard.local.md
 *.personal.md
 *.private.md
+.gemini/
+.claude/
+.qwen/
 
 # Test files
 *.test.mjs
+
+# Internal project tracking (not for distribution)
+_bmad/
+_bmad-output/
+gaps/
+GAP_REPORT.md
+.mcp.json
+nul

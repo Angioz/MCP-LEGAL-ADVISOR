@@ -53,6 +53,63 @@ export interface DatiGovQueryArgs {
   organization?: string;
 }
 
+// Camera dei Deputati Tool Types
+export interface CameraQueryArgs {
+  query: string;
+  legislature?: number;
+  document_type?: "atto" | "interrogazione" | "mozione" | "all";
+  limit?: number;
+}
+
+// Senato Tool Types
+export interface SenatoQueryArgs {
+  query: string;
+  legislature?: number;
+  document_type?: "ddl" | "atto" | "interrogazione" | "all";
+  limit?: number;
+}
+
+// EU Open Data Tool Types
+export interface EuDataQueryArgs {
+  query: string;
+  category?: string;
+  publisher?: string;
+  limit?: number;
+}
+
+// UK Legislation Tool Types
+export interface UkLegislationArgs {
+  query: string;
+  type?: "ukpga" | "uksi" | "asp" | "all";
+  year?: number;
+  limit?: number;
+}
+
+// Légifrance (France) Tool Types
+export interface LegifranceArgs {
+  query: string;
+  type?: "loi" | "ordonnance" | "decret" | "arrete" | "code" | "all";
+  date_from?: string;
+  date_to?: string;
+  limit?: number;
+}
+
+// German Laws Tool Types
+export interface GermanyLawArgs {
+  query: string;
+  law_code?: string;
+  limit?: number;
+}
+
+// Spanish BOE Tool Types
+export interface SpainBoeArgs {
+  query: string;
+  department?: string;
+  date_from?: string;
+  date_to?: string;
+  limit?: number;
+}
+
 // Union type for all tool arguments
 export type ToolArgs =
   | EurLexQueryArgs
@@ -60,7 +117,14 @@ export type ToolArgs =
   | NormattivaSearchArgs
   | CircolariSearchArgs
   | AadeSearchArgs
-  | DatiGovQueryArgs;
+  | DatiGovQueryArgs
+  | CameraQueryArgs
+  | SenatoQueryArgs
+  | EuDataQueryArgs
+  | UkLegislationArgs
+  | LegifranceArgs
+  | GermanyLawArgs
+  | SpainBoeArgs;
 
 // Tool response types
 export interface ToolSuccessResponse {

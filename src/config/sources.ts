@@ -13,18 +13,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
+ * Example query for a data source
+ */
+export interface SourceExample {
+  query: string;
+  description: string;
+}
+
+/**
  * Configuration for individual data sources
  */
 export interface SourceConfig {
   name: string;
+  description?: string;
+  country?: string;
+  type?: "sparql" | "rest" | "ckan";
   base_url?: string;
   sparql_endpoint?: string;
   rest_endpoint?: string;
   search_url?: string;
   circolari_path?: string;
+  documentation?: string;
   rate_limit: number;
   enabled: boolean;
   endpoints?: Record<string, string>;
+  examples?: SourceExample[];
 }
 
 /**
@@ -47,15 +60,30 @@ export interface LoggingConfig {
 
 /**
  * Complete configuration structure
+ * Includes all 13 legal data sources across 7 jurisdictions
  */
 export interface Config {
   sources: {
+    // EU (2 sources)
     eurlex: SourceConfig;
-    inps: SourceConfig;
+    eudata: SourceConfig;
+    // Italy (6 sources)
     normattiva: SourceConfig;
+    inps: SourceConfig;
     agenzia_entrate: SourceConfig;
-    aade: SourceConfig;
     datigov: SourceConfig;
+    camera: SourceConfig;
+    senato: SourceConfig;
+    // Greece (1 source)
+    aade: SourceConfig;
+    // UK (1 source)
+    uk_legislation: SourceConfig;
+    // France (1 source)
+    legifrance: SourceConfig;
+    // Germany (1 source)
+    germany: SourceConfig;
+    // Spain (1 source)
+    spain_boe: SourceConfig;
   };
   cache: CacheConfig;
   logging: LoggingConfig;

@@ -14,6 +14,7 @@ export {
 export type {
   Config,
   SourceConfig,
+  SourceExample,
   CacheConfig,
   LoggingConfig,
 } from "./sources.js";

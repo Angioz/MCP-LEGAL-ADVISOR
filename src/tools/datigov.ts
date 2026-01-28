@@ -97,7 +97,7 @@ export async function handleDatigov(
 
   try {
     const config = getSourceConfig("datigov");
-    const baseUrl = config.base_url!;
+    const baseUrl = config.rest_endpoint || config.base_url!;
 
     // Build search URL with parameters
     const params = new URLSearchParams();
