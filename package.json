@@ -1,7 +1,7 @@
 {
-  "name": "@anthropic/legal-knowledge-mcp",
-  "version": "0.1.0",
-  "description": "MCP server providing access to EU and Mediterranean legal sources (EUR-Lex, Italian Normattiva, INPS, Agenzia Entrate, Greek AADE)",
+  "name": "legal-knowledge-mcp",
+  "version": "1.0.0",
+  "description": "MCP server providing AI access to legal knowledge from 7 jurisdictions (EU, Italy, Greece, UK, France, Germany, Spain) via 13 legal data tools",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -15,8 +15,12 @@
   },
   "keywords": [
     "mcp",
+    "model-context-protocol",
     "claude",
     "legal",
+    "legal-tech",
+    "regulatory",
+    "compliance",
     "eu-law",
     "eurlex",
     "italian-law",
@@ -24,13 +28,20 @@
     "inps",
     "agenzia-entrate",
     "greek-tax",
-    "aade"
+    "aade",
+    "uk-legislation",
+    "legifrance",
+    "boe"
   ],
-  "author": "",
+  "author": "Angioz <angioz@users.noreply.github.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Angioz/MCP-LEGAL-ADVISOR"
+    "url": "git+https://github.com/Angioz/MCP-LEGAL-ADVISOR.git"
+  },
+  "homepage": "https://github.com/Angioz/MCP-LEGAL-ADVISOR#readme",
+  "bugs": {
+    "url": "https://github.com/Angioz/MCP-LEGAL-ADVISOR/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

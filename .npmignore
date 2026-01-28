@@ -1,0 +1,62 @@
+# Source files (TypeScript)
+src/
+
+# Tests
+tests/
+__tests__/
+*.test.ts
+*.spec.ts
+*.test.js
+*.test.d.ts
+dist/**/*.test.js
+dist/**/*.test.d.ts
+dist/**/*.test.js.map
+dist/**/*.test.d.ts.map
+
+# Development configuration
+tsconfig.json
+.eslintrc*
+.prettierrc*
+jest.config.*
+
+# Documentation (keep README.md and LICENSE)
+docs/
+
+# Git and IDE
+.git/
+.github/
+.gitignore
+.vscode/
+.idea/
+
+# AI tool configurations
+.gemini/
+.qwen/
+.claude/
+.mcp.json
+
+# Build artifacts (except dist/)
+*.log
+*.tsbuildinfo
+
+# Environment and secrets
+.env*
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+nul
+
+# Development dependencies info
+node_modules/
+
+# Project management
+_bmad/
+_bmad-output/
+gaps/
+GAP_REPORT.md
+agents/
+
+# Config templates (production uses defaults)
+config/

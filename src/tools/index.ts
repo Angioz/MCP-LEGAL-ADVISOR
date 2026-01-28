@@ -1,6 +1,6 @@
 /**
  * Tool registry and dispatcher for Legal Knowledge MCP server.
- * Phase 1: EUR-Lex, INPS, dati.gov.it implementations
+ * 13 tools covering EU, Italy, Greece, UK, France, Germany, Spain
  */
 
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
@@ -11,6 +11,16 @@ import { handleDatigov } from "./datigov.js";
 import { handleNormattiva } from "./normattiva.js";
 import { handleCircolari } from "./agenzia-entrate.js";
 import { handleAade } from "./aade.js";
+// New tools - Italian Parliament
+import { handleCamera } from "./camera.js";
+import { handleSenato } from "./senato.js";
+// New tools - EU
+import { handleEuData } from "./eudata.js";
+// New tools - European countries
+import { handleUkLegislation } from "./uk-legislation.js";
+import { handleLegifrance } from "./legifrance.js";
+import { handleGermany } from "./germany.js";
+import { handleSpainBoe } from "./spain-boe.js";
 import type { ToolStubResponse, ToolErrorResponse, ToolResponse } from "../types.js";
 
 // Export all tools for registration
@@ -18,21 +28,32 @@ export const TOOLS: Tool[] = ALL_TOOL_SCHEMAS;
 
 /**
  * Map of tool names to their handlers
- * Phase 1 tools are implemented, others return stubs
+ * All 13 tools are implemented
  */
 const TOOL_HANDLERS: Record<
   string,
   (args: Record<string, unknown>) => Promise<ToolResponse>
 > = {
-  // Phase 1 - Direct API Sources (ALL IMPLEMENTED)
+  // Original tools - EU & Italy & Greece
   legal_query_eurlex: handleEurLex,
   legal_query_inps: handleInps,
   legal_query_datigov: handleDatigov,
-
-  // Phase 2 - Portal Access
   legal_search_normattiva: handleNormattiva,
   legal_search_circolari: handleCircolari,
   legal_search_aade: handleAade,
+
+  // New tools - Italian Parliament
+  legal_query_camera: handleCamera,
+  legal_query_senato: handleSenato,
+
+  // New tools - EU Open Data
+  legal_query_eudata: handleEuData,
+
+  // New tools - European countries
+  legal_search_uk: handleUkLegislation,
+  legal_search_france: handleLegifrance,
+  legal_search_germany: handleGermany,
+  legal_search_spain: handleSpainBoe,
 };
 
 /**

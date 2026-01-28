@@ -188,7 +188,7 @@ export async function handleInps(
 
   try {
     const config = getSourceConfig("inps");
-    const baseUrl = config.base_url!;
+    const baseUrl = config.rest_endpoint || config.base_url!;
 
     // If specific dataset requested, fetch it directly
     if (input.dataset) {

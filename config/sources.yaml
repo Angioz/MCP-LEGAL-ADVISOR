@@ -1,0 +1,283 @@
+# Legal Knowledge MCP Server - Source Configuration
+# ================================================
+# This file configures all 13 legal data sources across 7 jurisdictions.
+# Each source can be enabled/disabled and has its own rate limits.
+#
+# To add a new source, copy an existing entry and modify as needed.
+# See CONTRIBUTING.md for detailed instructions.
+
+# ============================================
+# DATA SOURCES
+# ============================================
+
+sources:
+  # ------------------------------------------
+  # EUROPEAN UNION (2 sources)
+  # ------------------------------------------
+
+  eurlex:
+    name: "EUR-Lex CELLAR"
+    description: "EU law repository - directives, regulations, case law"
+    country: "EU"
+    type: "sparql"
+    sparql_endpoint: "https://publications.europa.eu/webapi/rdf/sparql"
+    documentation: "https://eur-lex.europa.eu/content/help/data-reuse/webservice.html"
+    rate_limit: 10  # requests per second
+    enabled: true
+    examples:
+      - query: "GDPR data protection"
+        description: "Find EU data protection regulations"
+      - query: "AI Act artificial intelligence"
+        description: "Find AI-related EU legislation"
+
+  eudata:
+    name: "EU Open Data Portal"
+    description: "European datasets via SPARQL endpoint"
+    country: "EU"
+    type: "sparql"
+    sparql_endpoint: "https://data.europa.eu/sparql"
+    documentation: "https://data.europa.eu/en"
+    rate_limit: 10
+    enabled: true
+    examples:
+      - query: "environmental statistics"
+        description: "Find environmental datasets"
+      - query: "economic indicators"
+        description: "Find economic data"
+
+  # ------------------------------------------
+  # ITALY (6 sources)
+  # ------------------------------------------
+
+  normattiva:
+    name: "Normattiva"
+    description: "Italian legislation database - laws, decrees, regulations"
+    country: "Italy"
+    type: "rest"
+    base_url: "https://www.normattiva.it"
+    search_url: "https://www.normattiva.it/ricerca/avanzata"
+    documentation: "https://www.normattiva.it"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "startup innovativa"
+        description: "Find laws about innovative startups"
+      - query: "codice civile matrimonio"
+        description: "Find civil code articles on marriage"
+
+  inps:
+    name: "INPS OpenData"
+    description: "Italian social security data and statistics"
+    country: "Italy"
+    type: "rest"
+    base_url: "https://www.inps.it"
+    rest_endpoint: "https://serviziweb2.inps.it/odapi/"
+    documentation: "https://www.inps.it/opendata"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "contributi previdenziali 2024"
+        description: "Find social security contribution rates"
+      - query: "pensione anticipata requisiti"
+        description: "Find early retirement requirements"
+
+  agenzia_entrate:
+    name: "Agenzia delle Entrate"
+    description: "Italian tax authority circulars and guidance"
+    country: "Italy"
+    type: "rest"
+    base_url: "https://www.agenziaentrate.gov.it"
+    circolari_path: "/normativa/circolari"
+    documentation: "https://www.agenziaentrate.gov.it"
+    rate_limit: 3
+    enabled: true
+    examples:
+      - query: "IVA aliquote 2024"
+        description: "Find VAT rate guidance"
+      - query: "bonus ristrutturazione"
+        description: "Find renovation tax credits"
+
+  datigov:
+    name: "dati.gov.it"
+    description: "Italian open data catalog (CKAN)"
+    country: "Italy"
+    type: "ckan"
+    base_url: "https://dati.gov.it"
+    rest_endpoint: "https://dati.gov.it/opendata/api/3/action/"
+    documentation: "https://www.dati.gov.it"
+    rate_limit: 10
+    enabled: true
+    examples:
+      - query: "bilancio comuni"
+        description: "Find municipal budget data"
+      - query: "registro imprese"
+        description: "Find business registry data"
+
+  camera:
+    name: "Camera dei Deputati"
+    description: "Italian Chamber of Deputies - bills, debates, votes"
+    country: "Italy"
+    type: "sparql"
+    sparql_endpoint: "https://dati.camera.it/sparql"
+    documentation: "https://dati.camera.it/en"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "legge bilancio 2024"
+        description: "Find budget law discussions"
+      - query: "decreto sicurezza"
+        description: "Find security decree debates"
+
+  senato:
+    name: "Senato della Repubblica"
+    description: "Italian Senate - legislation, debates, votes"
+    country: "Italy"
+    type: "sparql"
+    sparql_endpoint: "https://dati.senato.it/sparql"
+    documentation: "https://dati.senato.it"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "riforma giustizia"
+        description: "Find justice reform bills"
+      - query: "autonomia differenziata"
+        description: "Find regional autonomy legislation"
+
+  # ------------------------------------------
+  # GREECE (1 source)
+  # ------------------------------------------
+
+  aade:
+    name: "AADE"
+    description: "Greek tax authority - circulars and procedures"
+    country: "Greece"
+    type: "rest"
+    base_url: "https://www.aade.gr"
+    documentation: "https://www.aade.gr"
+    rate_limit: 3
+    enabled: true
+    examples:
+      - query: "VAT rates Greece"
+        description: "Find Greek VAT information"
+      - query: "IKE company formation"
+        description: "Find IKE company setup requirements"
+
+  # ------------------------------------------
+  # UNITED KINGDOM (1 source)
+  # ------------------------------------------
+
+  uk_legislation:
+    name: "legislation.gov.uk"
+    description: "UK legislation - Acts, Statutory Instruments"
+    country: "UK"
+    type: "rest"
+    base_url: "https://www.legislation.gov.uk"
+    documentation: "https://www.legislation.gov.uk/developer"
+    rate_limit: 10
+    enabled: true
+    examples:
+      - query: "data protection act"
+        description: "Find UK data protection laws"
+      - query: "companies act 2006"
+        description: "Find company law"
+
+  # ------------------------------------------
+  # FRANCE (1 source)
+  # ------------------------------------------
+
+  legifrance:
+    name: "Légifrance"
+    description: "French legislation and codes"
+    country: "France"
+    type: "rest"
+    base_url: "https://www.legifrance.gouv.fr"
+    documentation: "https://www.legifrance.gouv.fr"
+    # Note: Full API access requires free registration at piste.gouv.fr
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "RGPD protection données"
+        description: "Find French GDPR implementation"
+      - query: "code du travail"
+        description: "Find French labor code"
+
+  # ------------------------------------------
+  # GERMANY (1 source)
+  # ------------------------------------------
+
+  germany:
+    name: "Gesetze im Internet"
+    description: "German federal laws (many with English translations)"
+    country: "Germany"
+    type: "rest"
+    base_url: "https://www.gesetze-im-internet.de"
+    documentation: "https://www.gesetze-im-internet.de"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "GmbH formation requirements"
+        description: "Find GmbH company law"
+      - query: "BGB contract law"
+        description: "Find German civil code"
+
+  # ------------------------------------------
+  # SPAIN (1 source)
+  # ------------------------------------------
+
+  spain_boe:
+    name: "BOE (Boletín Oficial del Estado)"
+    description: "Spanish Official Gazette - laws and regulations"
+    country: "Spain"
+    type: "rest"
+    base_url: "https://www.boe.es"
+    search_url: "https://www.boe.es/buscar/"
+    documentation: "https://www.boe.es"
+    rate_limit: 5
+    enabled: true
+    examples:
+      - query: "ley de startups"
+        description: "Find Spanish startup law"
+      - query: "protección de datos"
+        description: "Find Spanish data protection"
+
+# ============================================
+# CACHE CONFIGURATION
+# ============================================
+
+cache:
+  enabled: true
+  directory: ".cache"
+  ttl_hours: 24
+  max_size_mb: 100
+
+# ============================================
+# LOGGING CONFIGURATION
+# ============================================
+
+logging:
+  level: "info"  # debug | info | warn | error
+  file: "logs/mcp.log"
+
+# ============================================
+# METADATA
+# ============================================
+
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-01-27"
+  total_sources: 13
+  jurisdictions:
+    - name: "European Union"
+      sources: 2
+    - name: "Italy"
+      sources: 6
+    - name: "Greece"
+      sources: 1
+    - name: "United Kingdom"
+      sources: 1
+    - name: "France"
+      sources: 1
+    - name: "Germany"
+      sources: 1
+    - name: "Spain"
+      sources: 1
