@@ -93,38 +93,57 @@ export interface Config {
 let cachedConfig: Config | null = null;
 
 /**
+ * Default configuration — used when no sources.yaml file is found.
+ * All 13 sources are enabled by default. Users can override by placing
+ * a config/sources.yaml file in the working directory.
+ */
+const DEFAULT_CONFIG: Config = {
+  sources: {
+    eurlex:          { name: "EUR-Lex", enabled: true, rate_limit: 10 },
+    eudata:          { name: "EU Open Data Portal", enabled: true, rate_limit: 10 },
+    normattiva:      { name: "Normattiva", enabled: true, rate_limit: 5 },
+    inps:            { name: "INPS", enabled: true, rate_limit: 5 },
+    agenzia_entrate: { name: "Agenzia delle Entrate", enabled: true, rate_limit: 5 },
+    datigov:         { name: "Dati.gov.it", enabled: true, rate_limit: 10 },
+    camera:          { name: "Camera dei Deputati", enabled: true, rate_limit: 10 },
+    senato:          { name: "Senato della Repubblica", enabled: true, rate_limit: 10 },
+    aade:            { name: "AADE", enabled: true, rate_limit: 5 },
+    uk_legislation:  { name: "UK Legislation", enabled: true, rate_limit: 10 },
+    legifrance:      { name: "Légifrance", enabled: true, rate_limit: 5 },
+    germany:         { name: "Bundesrecht", enabled: true, rate_limit: 10 },
+    spain_boe:       { name: "BOE España", enabled: true, rate_limit: 5 },
+  },
+  cache: { enabled: true, directory: ".cache", ttl_hours: 24, max_size_mb: 100 },
+  logging: { level: "info", file: "legal-knowledge-mcp.log" },
+};
+
+/**
  * Load configuration from YAML file.
  * Configuration is cached after first load.
+ * Falls back to DEFAULT_CONFIG if no YAML file is present.
  */
 export function loadConfig(): Config {
   if (cachedConfig) {
     return cachedConfig;
   }
 
-  // Try multiple paths to find config
+  // Try multiple paths to find an optional override file
   const possiblePaths = [
     join(__dirname, "../../config/sources.yaml"),
     join(__dirname, "../../../config/sources.yaml"),
     join(process.cwd(), "config/sources.yaml"),
   ];
 
-  let configPath: string | null = null;
   for (const path of possiblePaths) {
     if (existsSync(path)) {
-      configPath = path;
-      break;
+      const content = readFileSync(path, "utf-8");
+      cachedConfig = parse(content) as Config;
+      return cachedConfig;
     }
   }
 
-  if (!configPath) {
-    throw new Error(
-      `Configuration file not found. Searched paths:\n${possiblePaths.join("\n")}`
-    );
-  }
-
-  const content = readFileSync(configPath, "utf-8");
-  cachedConfig = parse(content) as Config;
-
+  // No override file found — use embedded defaults (all sources enabled)
+  cachedConfig = DEFAULT_CONFIG;
   return cachedConfig;
 }
 
@@ -149,7 +168,8 @@ export function isSourceEnabled(sourceName: keyof Config["sources"]): boolean {
   try {
     const source = getSourceConfig(sourceName);
     return source.enabled;
-  } catch {
+  } catch (err) {
+    process.stderr.write(`[legal-knowledge-mcp] Config error for source "${sourceName}": ${(err as Error).message}\n`);
     return false;
   }
 }

@@ -11,7 +11,7 @@ export interface ServerInfo {
 
 export const SERVER_INFO: ServerInfo = {
   name: "legal-knowledge",
-  version: "0.1.0",
+  version: "1.0.0",
   description: "MCP server providing access to authoritative legal and regulatory sources across EU and Mediterranean jurisdictions",
 };
 
