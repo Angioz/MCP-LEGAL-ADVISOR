@@ -13,15 +13,29 @@ Ask Claude questions about regulations, tax law, company formation, and complian
 
 ## Quick Start (5 minutes)
 
+### Prerequisites
+- [Node.js 18+](https://nodejs.org/) installed
+- [Claude Desktop](https://claude.ai/download) or [Claude Code CLI](https://claude.ai/code)
+
 ### 1. Install
 
 ```bash
 npm install -g legal-knowledge-mcp
 ```
 
+**Verify it works:**
+```bash
+legal-knowledge-mcp
+# Expected output: Legal Knowledge MCP server running on stdio
+```
+
 ### 2. Configure Claude
 
-Add to your Claude Desktop config (`~/.claude/settings.json` on Mac/Linux, `%APPDATA%\Claude\settings.json` on Windows):
+**Claude Desktop — Mac:**
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+**Claude Desktop — Windows:**
+Edit `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -32,6 +46,13 @@ Add to your Claude Desktop config (`~/.claude/settings.json` on Mac/Linux, `%APP
   }
 }
 ```
+
+**Claude Code CLI:**
+```bash
+claude mcp add legal-knowledge -- legal-knowledge-mcp
+```
+
+**Restart Claude Desktop** after editing the config.
 
 ### 3. Ask Claude
 
@@ -125,8 +146,8 @@ npx legal-knowledge-mcp
 
 ### Claude Desktop
 
-**Mac/Linux:** `~/.claude/settings.json`
-**Windows:** `%APPDATA%\Claude\settings.json`
+**Mac:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
@@ -138,6 +159,25 @@ npx legal-knowledge-mcp
 }
 ```
 
+> **Windows users:** If `legal-knowledge-mcp` is not found, use the full path:
+> ```json
+> {
+>   "mcpServers": {
+>     "legal-knowledge": {
+>       "command": "node",
+>       "args": ["C:\\Users\\YourName\\AppData\\Roaming\\npm\\node_modules\\legal-knowledge-mcp\\dist\\index.js"]
+>     }
+>   }
+> }
+> ```
+
+### Claude Code CLI (Recommended)
+
+```bash
+# Add to current project (one command)
+claude mcp add legal-knowledge -- legal-knowledge-mcp
+```
+
 ### Project-level (.mcp.json)
 
 For project-specific configuration:
@@ -146,14 +186,13 @@ For project-specific configuration:
 {
   "mcpServers": {
     "legal-knowledge": {
-      "command": "node",
-      "args": ["/path/to/legal-knowledge-mcp/dist/index.js"]
+      "command": "legal-knowledge-mcp"
     }
   }
 }
 ```
 
-### Claude Code CLI
+### Legacy Claude Code CLI
 
 ```bash
 # Add to current project
