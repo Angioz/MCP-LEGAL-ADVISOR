@@ -7,11 +7,20 @@
   "bin": {
     "legal-knowledge-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node dist/index.js",
-    "prepublishOnly": "npm run build"
+    "sanitize": "node scripts/sanitize.js",
+    "prepublishOnly": "npm run sanitize && npm run build"
   },
   "keywords": [
     "mcp",
