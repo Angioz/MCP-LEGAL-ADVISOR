@@ -58,5 +58,4 @@ gaps/
 GAP_REPORT.md
 agents/
 
-# Config templates (production uses defaults)
-config/
+# Keep dist/ - it's the compiled output
