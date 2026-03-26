@@ -29,6 +29,12 @@ legal-knowledge-mcp
 # Expected output: Legal Knowledge MCP server running on stdio
 ```
 
+> **Note for Italian law queries (Normattiva):** This tool uses a headless browser. Install the browser once after package install:
+> ```bash
+> npx playwright install chromium
+> ```
+> All other tools work without this step.
+
 ### 2. Configure Claude
 
 **Claude Desktop — Mac:**
@@ -347,6 +353,24 @@ Search Spanish legislation.
 ---
 
 ## Troubleshooting
+
+### All tools return `SOURCE_DISABLED`
+
+**Cause:** Configuration file not found and defaults not applied (affects v1.0.0 only — fixed in v1.0.1+).
+
+**Fix:** Upgrade to the latest version:
+```bash
+npm install -g legal-knowledge-mcp@latest
+```
+
+### `legal_search_normattiva` fails with browser/executable error
+
+**Cause:** Playwright's Chromium browser is not installed on your machine.
+
+**Fix:** Run once after installing the package:
+```bash
+npx playwright install chromium
+```
 
 ### "MCP server not found" or "command not found"
 
