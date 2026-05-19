@@ -7,6 +7,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { SPAIN_LAWS } from "../data/indexed-laws.js";
 
 const BASE_URL = "https://www.boe.es";
 const API_BASE = "https://www.boe.es/datosabiertos/api";
@@ -153,9 +155,17 @@ export async function handleSpainBoe(
     const limit = input.limit || 10;
     const queryLower = input.query.toLowerCase();
 
-    // Check pre-indexed laws first
-    let results: BoeResult[] = [];
+    // Layer 1: Multilingual fuzzy search on comprehensive indexed laws
+    const indexedMatches = searchIndexedLaws(SPAIN_LAWS, input.query, undefined, limit);
+    let results: BoeResult[] = indexedMatches.map(l => ({
+      title: l.title,
+      department: "",
+      date: "",
+      reference: l.law_ref,
+      url: l.url,
+    }));
 
+    // Layer 1b: Also check legacy INDEXED_LAWS
     for (const [key, laws] of Object.entries(INDEXED_LAWS)) {
       if (
         queryLower.includes(key) ||
@@ -170,7 +180,7 @@ export async function handleSpainBoe(
       }
     }
 
-    // If no pre-indexed results, try live search
+    // Layer 2: Live API search if no results yet
     if (results.length === 0) {
       results = await searchBoe(input.query, input.department, limit);
     }

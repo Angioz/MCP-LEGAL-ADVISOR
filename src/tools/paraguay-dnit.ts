@@ -9,6 +9,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { PARAGUAY_LAWS } from "../data/indexed-laws.js";
 
 const DNIT_PORTAL = "https://www.dnit.gov.py";
 const RUC_API = "https://servicios.set.gov.py/EsetApiWS/ApiWS/consultaRUC";
@@ -151,53 +153,35 @@ export async function handleParaguayDnit(
       };
     }
 
-    // Search indexed tax references
-    type RefEntry = (typeof INDEXED_TAX_REFS)[string][number];
-    let results: RefEntry[] = [];
-
+    // Layer 1: Multilingual fuzzy search on comprehensive indexed laws
     const topicFilter = input.topic || "all";
+    const topicMap: Record<string, string> = {
+      renta: "tax",
+      iva: "tax",
+      residencia_fiscal: "tax",
+      ruc: "tax",
+    };
+    const mappedTopic = topicFilter === "all" ? undefined : (topicMap[topicFilter] || topicFilter);
+    const indexedResults = searchIndexedLaws(PARAGUAY_LAWS, input.query, mappedTopic, 15);
 
-    for (const [key, refs] of Object.entries(INDEXED_TAX_REFS)) {
-      if (topicFilter !== "all" && key !== topicFilter && !key.includes(topicFilter)) {
-        continue;
-      }
+    // Layer 2: Also check local INDEXED_TAX_REFS for backward compat
+    type RefEntry = (typeof INDEXED_TAX_REFS)[string][number];
+    let results: RefEntry[] = indexedResults.map(l => ({
+      title: l.title,
+      description: l.description,
+      law: l.law_ref,
+      url: l.url,
+    }));
 
+    // Supplement with local refs if not already included
+    for (const refs of Object.values(INDEXED_TAX_REFS)) {
       for (const ref of refs) {
         if (
-          queryLower.includes(key) ||
-          key.includes(queryLower) ||
-          ref.title.toLowerCase().includes(queryLower) ||
-          ref.description.toLowerCase().includes(queryLower)
+          !results.some((r) => r.title === ref.title) &&
+          (ref.title.toLowerCase().includes(queryLower) ||
+           ref.description.toLowerCase().includes(queryLower))
         ) {
-          if (!results.some((r) => r.title === ref.title)) {
-            results.push(ref);
-          }
-        }
-      }
-    }
-
-    // Broad match: if no results, return all refs for the topic
-    if (results.length === 0 && topicFilter !== "all") {
-      const topicRefs = INDEXED_TAX_REFS[topicFilter];
-      if (topicRefs) results = topicRefs;
-    }
-
-    // If still no results, try matching any keyword across all refs
-    if (results.length === 0) {
-      for (const refs of Object.values(INDEXED_TAX_REFS)) {
-        for (const ref of refs) {
-          const words = queryLower.split(/\s+/);
-          if (
-            words.some(
-              (w) =>
-                ref.title.toLowerCase().includes(w) ||
-                ref.description.toLowerCase().includes(w)
-            )
-          ) {
-            if (!results.some((r) => r.title === ref.title)) {
-              results.push(ref);
-            }
-          }
+          results.push(ref);
         }
       }
     }

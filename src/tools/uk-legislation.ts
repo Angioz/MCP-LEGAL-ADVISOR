@@ -7,6 +7,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { UK_LAWS } from "../data/indexed-laws.js";
 
 const BASE_URL = "https://www.legislation.gov.uk";
 
@@ -63,8 +65,12 @@ export async function handleUkLegislation(
   }
 
   try {
-    // Build search URL
     const limit = input.limit || 10;
+
+    // Layer 1: Multilingual fuzzy pre-indexed search
+    const indexedMatches = searchIndexedLaws(UK_LAWS, input.query, undefined, limit);
+
+    // Layer 2: Live API search
     let searchUrl = `${BASE_URL}/search?text=${encodeURIComponent(input.query)}`;
 
     // Add type filter if specified
@@ -104,7 +110,25 @@ export async function handleUkLegislation(
     const xmlText = await response.text();
 
     // Parse Atom XML to extract results
-    const results = parseAtomResults(xmlText, limit);
+    let results = parseAtomResults(xmlText, limit);
+
+    // Merge: if live API returned nothing, use indexed results
+    if (results.length === 0 && indexedMatches.length > 0) {
+      results = indexedMatches.map(l => ({
+        title: l.title,
+        type: l.topic,
+        year: "",
+        number: l.law_ref,
+        url: l.url,
+      }));
+    } else if (indexedMatches.length > 0) {
+      for (const im of indexedMatches) {
+        if (!results.some(r => r.title === im.title)) {
+          results.push({ title: im.title, type: im.topic, year: "", number: im.law_ref, url: im.url });
+        }
+      }
+      results = results.slice(0, limit);
+    }
 
     return {
       status: "success",

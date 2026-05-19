@@ -7,6 +7,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { GERMANY_LAWS } from "../data/indexed-laws.js";
 
 const BASE_URL = "https://www.gesetze-im-internet.de";
 
@@ -193,18 +195,29 @@ export async function handleGermany(
     const limit = input.limit || 10;
     const queryLower = input.query.toLowerCase();
 
-    // Check pre-indexed laws first
-    let results: GermanyLawResult[] = [];
+    // Layer 1: Multilingual fuzzy search on comprehensive indexed laws
+    const indexedMatches = searchIndexedLaws(GERMANY_LAWS, input.query, undefined, limit);
+    let results: GermanyLawResult[] = indexedMatches.map(l => ({
+      title: l.law_ref,
+      full_title: l.title,
+      abbreviation: l.law_ref,
+      url: l.url,
+      description: l.description,
+      english_available: false,
+    }));
 
-    // Direct law code lookup
+    // Layer 1b: Also check legacy INDEXED_LAWS
     if (input.law_code) {
       const codeLower = input.law_code.toLowerCase();
       if (INDEXED_LAWS[codeLower]) {
-        results.push(...INDEXED_LAWS[codeLower]);
+        for (const law of INDEXED_LAWS[codeLower]) {
+          if (!results.some((r) => r.url === law.url)) {
+            results.push(law);
+          }
+        }
       }
     }
 
-    // Search in indexed laws by keyword
     for (const [key, laws] of Object.entries(INDEXED_LAWS)) {
       if (
         queryLower.includes(key) ||
