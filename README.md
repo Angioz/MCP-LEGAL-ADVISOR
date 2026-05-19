@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-blue.svg)](https://modelcontextprotocol.io/)
 
-An MCP (Model Context Protocol) server that gives Claude access to **13 legal data tools** across **7 jurisdictions** - EU, Italy, Greece, UK, France, Germany, and Spain.
+An MCP (Model Context Protocol) server that gives Claude access to **16 legal data tools** across **8 jurisdictions** - EU, Italy, Greece, UK, France, Germany, Spain, and Paraguay.
 
 Ask Claude questions about regulations, tax law, company formation, and compliance - get answers sourced directly from official government databases.
 
@@ -67,6 +67,8 @@ claude mcp add legal-knowledge -- legal-knowledge-mcp
 "Search UK legislation for data protection"
 "Find German company law GmbHG"
 "What are Greek IKE tax rates?"
+"Search Paraguayan tax residency requirements"
+"Find Paraguay income tax law"
 ```
 
 ---
@@ -88,6 +90,9 @@ claude mcp add legal-knowledge -- legal-knowledge-mcp
 | **France** | `legal_search_france` | Legifrance | Codes, laws, decrets |
 | **Germany** | `legal_search_germany` | Gesetze im Internet | Federal laws (BGB, HGB, GmbHG) |
 | **Spain** | `legal_search_spain` | BOE | Official gazette, legislation |
+| **Paraguay** | `legal_search_paraguay` | SILpy (Congress) | Laws, bills, parliamentary activity |
+| **Paraguay** | `legal_query_paraguay_dnit` | DNIT | Tax law, RUC validation, residency rules |
+| **Paraguay** | `legal_query_paraguay_opendata` | datos.gov.py | Government open data, public finance |
 
 ---
 
@@ -350,6 +355,38 @@ Search Spanish legislation.
 | `date_to` | string | No | End date (YYYY-MM-DD) |
 | `limit` | number | No | Max results (default: 10) |
 
+### SILpy - Paraguay Congress (`legal_search_paraguay`)
+
+Search Paraguayan legislation and bills.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | Yes | Search terms |
+| `type` | enum | No | ley (law), proyecto (bill), all |
+| `year` | number | No | Year of the law |
+| `chamber` | enum | No | S (Senate), D (Deputies) |
+| `limit` | number | No | Max results (default: 10) |
+
+### DNIT - Paraguay Tax (`legal_query_paraguay_dnit`)
+
+Query Paraguayan tax authority for tax law, RUC validation, and residency rules.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | Yes | Search terms |
+| `ruc` | string | No | RUC number to validate (triggers direct lookup) |
+| `topic` | enum | No | renta (income), iva (VAT), residencia_fiscal (tax residency), ruc (taxpayer ID), all |
+
+### datos.gov.py - Paraguay Open Data (`legal_query_paraguay_opendata`)
+
+Query Paraguay government open data portal.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | Yes | Search terms |
+| `organization` | string | No | Publishing organization filter |
+| `limit` | number | No | Max results (default: 10) |
+
 ---
 
 ## Troubleshooting
@@ -473,7 +510,7 @@ src/
 ├── types.ts              # TypeScript types
 ├── tools/
 │   ├── index.ts          # Tool registry
-│   ├── schemas.ts        # JSON schemas (13 tools)
+│   ├── schemas.ts        # JSON schemas (16 tools)
 │   ├── eurlex.ts         # EU law (SPARQL)
 │   ├── normattiva.ts     # Italian law
 │   ├── inps.ts           # Italian social security
@@ -486,7 +523,10 @@ src/
 │   ├── uk-legislation.ts # UK law
 │   ├── legifrance.ts     # French law
 │   ├── germany.ts        # German law
-│   └── spain-boe.ts      # Spanish law
+│   ├── spain-boe.ts      # Spanish law
+│   ├── paraguay-congress.ts  # Paraguayan law (SILpy)
+│   ├── paraguay-dnit.ts      # Paraguayan tax (DNIT)
+│   └── paraguay-opendata.ts  # Paraguayan open data
 └── config/
     ├── index.ts          # Config loader
     └── sources.ts        # Source definitions
@@ -510,7 +550,7 @@ Areas of interest:
 
 See [ROADMAP.md](ROADMAP.md) for planned features.
 
-**Phase 1** (Current): Foundation - 13 tools, 7 jurisdictions
+**Phase 1** (Current): Foundation - 16 tools, 8 jurisdictions
 **Phase 2**: LinkedIn launch, community building
 **Phase 3**: Global expansion to 50+ jurisdictions
 

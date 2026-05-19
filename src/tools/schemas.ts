@@ -405,6 +405,100 @@ export const SPAIN_BOE_TOOL: Tool = {
 };
 
 /**
+ * Paraguay Congress (SILpy) Tool
+ * Source: https://datos.congreso.gov.py/opendata/api
+ */
+export const PARAGUAY_CONGRESS_TOOL: Tool = {
+  name: "legal_search_paraguay",
+  description: "Search Paraguayan legislation and bills via SILpy (Congress Open Data API). Returns laws, bills, and parliamentary activity.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: {
+        type: "string",
+        description: "Search terms for Paraguayan legislation",
+      },
+      type: {
+        type: "string",
+        enum: ["ley", "proyecto", "all"],
+        description: "Type of document (ley=law, proyecto=bill/project)",
+      },
+      year: {
+        type: "number",
+        description: "Year of the law",
+      },
+      chamber: {
+        type: "string",
+        enum: ["S", "D"],
+        description: "Legislative chamber (S=Senate, D=Deputies)",
+      },
+      limit: {
+        type: "number",
+        description: "Maximum results to return (default: 10)",
+        default: 10,
+      },
+    },
+    required: ["query"],
+  },
+};
+
+/**
+ * Paraguay DNIT Tax Authority Tool
+ * Source: https://www.dnit.gov.py
+ */
+export const PARAGUAY_DNIT_TOOL: Tool = {
+  name: "legal_query_paraguay_dnit",
+  description: "Query Paraguayan tax authority (DNIT) for tax law, RUC validation, residency rules, and territorial taxation guidance.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: {
+        type: "string",
+        description: "Search terms for Paraguayan tax guidance",
+      },
+      ruc: {
+        type: "string",
+        description: "RUC number to validate (optional — triggers direct lookup)",
+      },
+      topic: {
+        type: "string",
+        enum: ["renta", "iva", "residencia_fiscal", "ruc", "all"],
+        description: "Tax topic (renta=income tax, iva=VAT, residencia_fiscal=tax residency, ruc=taxpayer ID)",
+      },
+    },
+    required: ["query"],
+  },
+};
+
+/**
+ * Paraguay Open Data (datos.gov.py) Tool
+ * Source: https://www.datos.gov.py
+ */
+export const PARAGUAY_OPENDATA_TOOL: Tool = {
+  name: "legal_query_paraguay_opendata",
+  description: "Query Paraguay open data portal (datos.gov.py) for government datasets on public finance, procurement, and administration.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: {
+        type: "string",
+        description: "Search terms for Paraguayan government datasets",
+      },
+      organization: {
+        type: "string",
+        description: "Publishing organization filter",
+      },
+      limit: {
+        type: "number",
+        description: "Maximum results to return (default: 10)",
+        default: 10,
+      },
+    },
+    required: ["query"],
+  },
+};
+
+/**
  * All tool schemas for registration
  */
 export const ALL_TOOL_SCHEMAS: Tool[] = [
@@ -425,4 +519,8 @@ export const ALL_TOOL_SCHEMAS: Tool[] = [
   LEGIFRANCE_TOOL,
   GERMANY_TOOL,
   SPAIN_BOE_TOOL,
+  // New tools - Paraguay
+  PARAGUAY_CONGRESS_TOOL,
+  PARAGUAY_DNIT_TOOL,
+  PARAGUAY_OPENDATA_TOOL,
 ];

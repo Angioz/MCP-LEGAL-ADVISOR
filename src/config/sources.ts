@@ -60,7 +60,7 @@ export interface LoggingConfig {
 
 /**
  * Complete configuration structure
- * Includes all 13 legal data sources across 7 jurisdictions
+ * Includes all 16 legal data sources across 8 jurisdictions
  */
 export interface Config {
   sources: {
@@ -84,6 +84,10 @@ export interface Config {
     germany: SourceConfig;
     // Spain (1 source)
     spain_boe: SourceConfig;
+    // Paraguay (3 sources)
+    paraguay_congress: SourceConfig;
+    paraguay_dnit: SourceConfig;
+    paraguay_opendata: SourceConfig;
   };
   cache: CacheConfig;
   logging: LoggingConfig;
@@ -112,6 +116,10 @@ const DEFAULT_CONFIG: Config = {
     legifrance:      { name: "Légifrance", enabled: true, rate_limit: 5 },
     germany:         { name: "Bundesrecht", enabled: true, rate_limit: 10 },
     spain_boe:       { name: "BOE España", enabled: true, rate_limit: 5 },
+    // Paraguay (3 sources)
+    paraguay_congress: { name: "SILpy - Congreso del Paraguay", enabled: true, rate_limit: 10 },
+    paraguay_dnit:     { name: "DNIT - Ingresos Tributarios", enabled: true, rate_limit: 5 },
+    paraguay_opendata: { name: "datos.gov.py", enabled: true, rate_limit: 10 },
   },
   cache: { enabled: true, directory: ".cache", ttl_hours: 24, max_size_mb: 100 },
   logging: { level: "info", file: "legal-knowledge-mcp.log" },

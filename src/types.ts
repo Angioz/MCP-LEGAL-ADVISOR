@@ -110,6 +110,31 @@ export interface SpainBoeArgs {
   limit?: number;
 }
 
+// Paraguay Congress Tool Types
+export interface ParaguayCongressArgs {
+  query: string;
+  type?: "ley" | "proyecto" | "all";
+  year?: number;
+  chamber?: "S" | "D";
+  limit?: number;
+}
+
+// Paraguay DNIT Tool Types
+export type ParaguayDnitTopic = "renta" | "iva" | "residencia_fiscal" | "ruc" | "all";
+
+export interface ParaguayDnitArgs {
+  query: string;
+  ruc?: string;
+  topic?: ParaguayDnitTopic;
+}
+
+// Paraguay Open Data Tool Types
+export interface ParaguayOpenDataArgs {
+  query: string;
+  organization?: string;
+  limit?: number;
+}
+
 // Union type for all tool arguments
 export type ToolArgs =
   | EurLexQueryArgs
@@ -124,7 +149,10 @@ export type ToolArgs =
   | UkLegislationArgs
   | LegifranceArgs
   | GermanyLawArgs
-  | SpainBoeArgs;
+  | SpainBoeArgs
+  | ParaguayCongressArgs
+  | ParaguayDnitArgs
+  | ParaguayOpenDataArgs;
 
 // Tool response types
 export interface ToolSuccessResponse {
