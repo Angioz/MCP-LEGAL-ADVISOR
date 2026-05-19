@@ -10,6 +10,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { FRANCE_LAWS } from "../data/indexed-laws.js";
 
 const BASE_URL = "https://www.legifrance.gouv.fr";
 
@@ -130,16 +132,28 @@ export async function handleLegifrance(
     const limit = input.limit || 10;
     const queryLower = input.query.toLowerCase();
 
-    // Check pre-indexed texts first
-    let results: LegifranceResult[] = [];
+    // Layer 1: Multilingual fuzzy search
+    const indexedMatches = searchIndexedLaws(FRANCE_LAWS, input.query, undefined, limit);
+    let results: LegifranceResult[] = indexedMatches.map(l => ({
+      title: l.title,
+      type: l.topic,
+      date: "",
+      reference: l.law_ref,
+      url: l.url,
+    }));
 
+    // Layer 1b: Also check legacy INDEXED_TEXTS
     for (const [key, texts] of Object.entries(INDEXED_TEXTS)) {
       if (queryLower.includes(key.replace(/_/g, " ")) || key.includes(queryLower.replace(/ /g, "_"))) {
-        results.push(...texts);
+        for (const t of texts) {
+          if (!results.some(r => r.title === t.title)) {
+            results.push(t);
+          }
+        }
       }
     }
 
-    // If no pre-indexed results, try live search
+    // Layer 2: Live search if no results yet
     if (results.length === 0) {
       results = await searchLegifrance(input.query, input.type, limit);
     }

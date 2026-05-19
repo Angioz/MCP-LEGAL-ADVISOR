@@ -7,6 +7,8 @@
  */
 
 import type { ToolSuccessResponse, ToolErrorResponse } from "../types.js";
+import { searchIndexedLaws } from "../utils/keyword-search.js";
+import { PARAGUAY_LAWS } from "../data/indexed-laws.js";
 
 const API_BASE = "https://datos.congreso.gov.py/opendata/api";
 
@@ -167,6 +169,17 @@ export async function handleParaguayCongress(
     const searchType = input.type || "all";
     let results: FormattedResult[] = [];
 
+    // Layer 1: Pre-indexed laws (always works, multilingual)
+    const indexed = searchIndexedLaws(PARAGUAY_LAWS, input.query, undefined, limit);
+    const indexedResults: FormattedResult[] = indexed.map(l => ({
+      type: "indexed",
+      id: 0,
+      title: l.title,
+      description: l.description,
+      url: l.url,
+    }));
+
+    // Layer 2: Live SILpy API search
     if (searchType === "ley" || searchType === "all") {
       const laws = await searchLaws(input.query, input.year, limit);
       results.push(...laws);
@@ -179,6 +192,18 @@ export async function handleParaguayCongress(
         limit
       );
       results.push(...projects);
+    }
+
+    // Merge: live results first, indexed as fallback
+    if (results.length === 0) {
+      results = indexedResults;
+    } else {
+      // Append indexed results not already in live results
+      for (const ir of indexedResults) {
+        if (!results.some(r => r.title === ir.title)) {
+          results.push(ir);
+        }
+      }
     }
 
     results = results.slice(0, limit);
