@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-blue.svg)](https://modelcontextprotocol.io/)
 
-An MCP (Model Context Protocol) server that gives Claude access to **16 legal data tools** across **8 jurisdictions** - EU, Italy, Greece, UK, France, Germany, Spain, and Paraguay.
+An MCP (Model Context Protocol) server that gives Claude access to **20 legal data tools** across **9 jurisdictions** - United States (federal + all 50 states), EU, Italy, Greece, UK, France, Germany, Spain, and Paraguay.
 
 Ask Claude questions about regulations, tax law, company formation, and compliance - get answers sourced directly from official government databases.
 
@@ -69,6 +69,8 @@ claude mcp add legal-knowledge -- legal-knowledge-mcp
 "What are Greek IKE tax rates?"
 "Search Paraguayan tax residency requirements"
 "Find Paraguay income tax law"
+"What does a foreign-owned Wyoming LLC have to file with the IRS?"
+"Search Wyoming bills about limited liability companies"
 ```
 
 ---
@@ -93,6 +95,10 @@ claude mcp add legal-knowledge -- legal-knowledge-mcp
 | **Paraguay** | `legal_search_paraguay` | SILpy (Congress) | Laws, bills, parliamentary activity |
 | **Paraguay** | `legal_query_paraguay_dnit` | DNIT | Tax law, RUC validation, residency rules |
 | **Paraguay** | `legal_query_paraguay_opendata` | datos.gov.py | Government open data, public finance |
+| **US** | `legal_search_us` | Curated index + eCFR + Federal Register | Federal law & regulations, Wyoming/Delaware LLC law |
+| **US** | `legal_search_us_code` | GovInfo | US Code, public laws, congressional bills |
+| **US** | `legal_search_us_states` | Open States | Bills in all 50 states, DC, Puerto Rico (key) |
+| **US** | `legal_search_us_caselaw` | CourtListener | Federal and state court opinions (key) |
 
 ---
 
@@ -386,6 +392,36 @@ Query Paraguay government open data portal.
 | `query` | string | Yes | Search terms |
 | `organization` | string | No | Publishing organization filter |
 | `limit` | number | No | Max results (default: 10) |
+
+### United States (`legal_search_us`, `legal_search_us_code`, `legal_search_us_states`, `legal_search_us_caselaw`)
+
+| Tool | Parameters | API key |
+|------|-----------|---------|
+| `legal_search_us` | `query`, `topic` (tax, company, labor, immigration, …), `limit` | None |
+| `legal_search_us_code` | `query`, `collection` (uscode, public_laws, bills, cfr), `limit` | Optional `GOVINFO_API_KEY` ([free](https://api.data.gov/signup/)); works at low volume without |
+| `legal_search_us_states` | `query`, `state` (e.g. `wy`), `limit` | `OPENSTATES_API_KEY` ([free](https://openstates.org/accounts/signup/)) |
+| `legal_search_us_caselaw` | `query`, `court` (e.g. `wyo`, `scotus`), `limit` | `COURTLISTENER_API_TOKEN` ([free](https://www.courtlistener.com/sign-in/)) |
+
+Keys go in the `env` block of the server config:
+
+```json
+"legal-knowledge": {
+  "command": "npx",
+  "args": ["-y", "legal-knowledge-mcp"],
+  "env": { "OPENSTATES_API_KEY": "...", "COURTLISTENER_API_TOKEN": "...", "GOVINFO_API_KEY": "..." }
+}
+```
+
+State statute text has no free 50-state API. The curated index covers Wyoming and Delaware business law with links to the official codes; `legal_search_us_states` covers new and pending state bills.
+
+---
+
+## Agent Skill
+
+[`skills/legal-knowledge/SKILL.md`](skills/legal-knowledge/SKILL.md) tells an AI agent which tool to use for which question, how to phrase searches, and how to cite results. It ships with the npm package.
+
+- **Claude Code:** copy it to `~/.claude/skills/legal-knowledge/SKILL.md` (all projects) or `.claude/skills/legal-knowledge/SKILL.md` (one project).
+- **Other agents:** paste its contents into the system prompt or custom instructions.
 
 ---
 

@@ -498,6 +498,80 @@ export const PARAGUAY_OPENDATA_TOOL: Tool = {
   },
 };
 
+const LIMIT_PROP = {
+  type: "number",
+  description: "Maximum results per source (default: 10, max: 50)",
+  default: 10,
+};
+
+export const US_FEDERAL_TOOL: Tool = {
+  name: "legal_search_us",
+  description:
+    "Search US federal law plus Wyoming and Delaware business law. Combines a curated index (IRC, OBBBA 2025, LLC tax classification, Form 5472, BOI/Corporate Transparency Act, Wyoming & Delaware LLC Acts, immigration) with live search of the eCFR (all current federal regulations) and the Federal Register (new and proposed rules). No API key needed.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search terms, e.g. 'foreign owned llc form 5472' or 'wyoming llc annual report'" },
+      topic: {
+        type: "string",
+        enum: ["tax", "company", "labor", "data_protection", "immigration", "ip", "constitutional", "administrative", "all"],
+        description: "Filter the curated index by topic (live sources are not filtered)",
+      },
+      limit: LIMIT_PROP,
+    },
+    required: ["query"],
+  },
+};
+
+export const US_CODE_TOOL: Tool = {
+  name: "legal_search_us_code",
+  description:
+    "Full-text search of the United States Code, public laws and congressional bills via GovInfo (US Government Publishing Office). Works without setup at low volume; set GOVINFO_API_KEY (free api.data.gov key) for regular use.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search terms, e.g. 'limited liability company' or '\"section 6038A\"'" },
+      collection: {
+        type: "string",
+        enum: ["uscode", "public_laws", "bills", "cfr", "all"],
+        description: "Restrict to one collection (default: US Code + public laws + bills)",
+      },
+      limit: LIMIT_PROP,
+    },
+    required: ["query"],
+  },
+};
+
+export const US_STATES_TOOL: Tool = {
+  name: "legal_search_us_states",
+  description:
+    "Search bills in all 50 US state legislatures, DC and Puerto Rico via Open States. Requires the free OPENSTATES_API_KEY environment variable.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search terms, e.g. 'limited liability company'" },
+      state: { type: "string", description: "Two-letter state code or state name, e.g. 'wy' or 'Wyoming' (default: all states)" },
+      limit: { ...LIMIT_PROP, description: "Maximum results (default: 10, max: 20)" },
+    },
+    required: ["query"],
+  },
+};
+
+export const US_CASELAW_TOOL: Tool = {
+  name: "legal_search_us_caselaw",
+  description:
+    "Search federal and state court opinions via CourtListener (Free Law Project). Requires the free COURTLISTENER_API_TOKEN environment variable.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      query: { type: "string", description: "Search terms, e.g. 'single member llc charging order'" },
+      court: { type: "string", description: "CourtListener court id(s), space-separated, e.g. 'wyo' (Wyoming Supreme Court), 'del' or 'scotus'" },
+      limit: LIMIT_PROP,
+    },
+    required: ["query"],
+  },
+};
+
 /**
  * All tool schemas for registration
  */
@@ -523,4 +597,9 @@ export const ALL_TOOL_SCHEMAS: Tool[] = [
   PARAGUAY_CONGRESS_TOOL,
   PARAGUAY_DNIT_TOOL,
   PARAGUAY_OPENDATA_TOOL,
+  // United States
+  US_FEDERAL_TOOL,
+  US_CODE_TOOL,
+  US_STATES_TOOL,
+  US_CASELAW_TOOL,
 ];

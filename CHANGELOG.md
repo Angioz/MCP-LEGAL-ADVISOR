@@ -8,10 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Additional jurisdictions (US, Canada, Australia)
+- Additional jurisdictions (Canada, Australia)
 - Smart legal advisor features
 - Citation cross-referencing
 - Multi-language query support
+
+## [1.3.0] - 2026-11-05
+
+### Added
+- United States: `legal_search_us` (curated federal, Wyoming and Delaware law + live eCFR + Federal Register), `legal_search_us_code` (GovInfo: US Code, public laws, bills), `legal_search_us_states` (Open States: all 50 states), `legal_search_us_caselaw` (CourtListener)
+- Agent skill `skills/legal-knowledge/SKILL.md`, shipped in the npm package
+- `npm test` (Node built-in test runner)
 
 ## [1.0.0] - 2026-01-28
 
@@ -74,9 +81,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 1.3.0 | 2026-11-05 | United States (4 tools) and agent skill |
 | 1.0.0 | 2026-01-28 | Initial release with 13 tools across 7 jurisdictions |
 
 ---
 
-[Unreleased]: https://github.com/Angioz/MCP-LEGAL-ADVISOR/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Angioz/MCP-LEGAL-ADVISOR/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/Angioz/MCP-LEGAL-ADVISOR/releases/tag/v1.3.0
 [1.0.0]: https://github.com/Angioz/MCP-LEGAL-ADVISOR/releases/tag/v1.0.0

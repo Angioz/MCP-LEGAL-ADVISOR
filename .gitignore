@@ -46,3 +46,24 @@ gaps/
 GAP_REPORT.md
 .mcp.json
 nul
+
+# Personal and internal working files (public usage guidance lives in skills/)
+.serena/
+.repowise/
+agents/
+docs/SETUP_NOTION.md
+DEPLOYMENT_REFERENCE.md
+SANITIZATION_SOP.md
+.env.*
+!.env.example
+.npmrc
+.pypirc
+*.pem
+*.key
+.cursor/
+memory/
+memories/
+sidecar/
+*.db
+*.sqlite
+*.sqlite3

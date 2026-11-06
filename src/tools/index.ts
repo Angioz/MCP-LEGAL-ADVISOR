@@ -1,6 +1,6 @@
 /**
  * Tool registry and dispatcher for Legal Knowledge MCP server.
- * 16 tools covering EU, Italy, Greece, UK, France, Germany, Spain, Paraguay
+ * 20 tools covering EU, Italy, Greece, UK, France, Germany, Spain, Paraguay, United States
  */
 
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
@@ -25,6 +25,7 @@ import { handleSpainBoe } from "./spain-boe.js";
 import { handleParaguayCongress } from "./paraguay-congress.js";
 import { handleParaguayDnit } from "./paraguay-dnit.js";
 import { handleParaguayOpenData } from "./paraguay-opendata.js";
+import { handleUsFederal, handleUsCode, handleUsStates, handleUsCaselaw } from "./us.js";
 import type { ToolStubResponse, ToolErrorResponse, ToolResponse } from "../types.js";
 
 // Export all tools for registration
@@ -32,7 +33,7 @@ export const TOOLS: Tool[] = ALL_TOOL_SCHEMAS;
 
 /**
  * Map of tool names to their handlers
- * All 16 tools are implemented
+ * All 20 tools are implemented
  */
 const TOOL_HANDLERS: Record<
   string,
@@ -63,6 +64,12 @@ const TOOL_HANDLERS: Record<
   legal_search_paraguay: handleParaguayCongress,
   legal_query_paraguay_dnit: handleParaguayDnit,
   legal_query_paraguay_opendata: handleParaguayOpenData,
+
+  // United States
+  legal_search_us: handleUsFederal,
+  legal_search_us_code: handleUsCode,
+  legal_search_us_states: handleUsStates,
+  legal_search_us_caselaw: handleUsCaselaw,
 };
 
 /**
